@@ -1,6 +1,6 @@
 ---
 title: "Classifying Occurrence Data with *occTest*"
-author: "Pep Serra-Diaz, Cory Merow"
+author: "Pep Serra-Diaz, Cory Merow, Jeremy Borderieux, Brian Maitner"
 date: "`r Sys.Date()`"
 output: 
   rmarkdown::html_vignette:
