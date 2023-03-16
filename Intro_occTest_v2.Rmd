@@ -41,7 +41,7 @@ The species occurrence data.frame contains the presence records in latitude-long
 3. Environmental raster (r.env; rasterStack), with quantitative continuous variables such as a climate.
 The environment raster is a rasterStack object that contains the climate variables intended for use in an SDM or another analysis relating species occurrence and climate.
 
-```{r}
+```{r,warning=FALSE}
 #load data
 library(spocc)
 df <- occ(query = 'Martes martes')
@@ -76,7 +76,7 @@ nrow (outMartesMartes)
 #number of variables
 ncol(outMartesMartes)
 #take a look at the names of the new variables
-names (outMartesMartes)
+head(names (outMartesMartes),20)
 ```
 
 ### Inspect the results
@@ -180,12 +180,12 @@ The user can specify if outputs are to be written.
 \$write.simple.output | should full output table be written | logical. Defaults to F
 \$output.base.filename | what is the suffix of the output table filename? | character. Deafaults to 'QAQC'
 
-### an example of how to retrieve and modify settings
+### An example of how to retrieve and modify settings
 
 In this example we are going to turn off tests related to geoenvironmental accuracy analysis because our data has not enough information on coordinate uncertainty. [NOTE: even under such cirumstances where you do not have that data,the result of the test would be NA and would not affect the result]
 
-```{r}
-#load minimal settings
+```{r,warning=FALSE}
+ #load minimal settings
 mySettings <- minimalSettings()
 #change the attribute of interest (in this case setting an analysis off)
 mySettings$analysisSettings$accuracyAnalysis$do.geoEnvAccuracy = F
@@ -198,7 +198,7 @@ out = occTest::occTest(sp.name='Martes martes', sp.table = occ.data,r.env = envi
 
 We can perform a quick test with all defaults. This has a minimal number of inputs and therefore a lot of the tests cannot be performed (note the large amount of NAs in the outputs. These minimal inputs are the data.frame of species occurrence and environmental variables. Parmeter settings are minimal, and can be displayed using the minimalSettings() function
 
-```{r}
+```{r, warning=FALSE}
 #load packages
 library(occTest)
 library(spocc)
@@ -274,6 +274,22 @@ nrow (outDougFirSelecstrict [['filteredDataset']] )
 nrow (outDougFirSelecMajority [['filteredDataset']] )
 nrow (outDougFirSelec[['filteredDataset']])
 ```
+
+## Let's visualize the strict selection with the plotting function
+
+the plot method for the occTest object returned by *occTest* display the initial coordinates filtering.
+
+If the second argument of the plot function is provided, the output of the corresponding *occFilter* call, then then occurrences removed by each testType our testBlock are displayed.
+
+By default, the functon returns a list of ggplot objects, so you can store them.
+You can also display the plots one by one when storing the result and setting show_plot to TRUE
+
+
+```{r fig.height = 5.5, fig.width = 7}
+list_of_plots<-plot(outDougFir , occFilter_list = outDougFirSelecstrict, show_plot = T)
+```
+
+
 
 # Example 2: Making the function turn with more detailed data (and more options)
 
@@ -378,7 +394,7 @@ outFiltered_byTestType  = occFilter(df = out,errorAcceptance = 'relaxed',by = 't
 ```
 
 
-# Plotting the results
+## Let's plotting the results
 
 ```{r fig.height = 5.5, fig.width = 7}
 list_of_plots<-plot(out , occFilter_list = outFiltered_byTestType, show_plot = T)
