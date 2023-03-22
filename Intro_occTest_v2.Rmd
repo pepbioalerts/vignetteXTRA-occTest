@@ -274,6 +274,18 @@ nrow(outDougFirSelecMajority [['filteredDataset']] )
 nrow(outDougFirSelec[['filteredDataset']])
 ```
 
+We can also setup a custom filtering process, by appending a column named `errorThreshold` to the data.frame describing the various tests. The threshold you pick must be the same for every tests of the same type (testBlocks or testTypes), determined by the `by` argument of occFilter. in the example below, we load the data.frame of test types and set a more strict threshold to the geographic test (geo testBlock), and relaxed threshold to the land uses and human influence (lu testBlock) tests.
+
+```{r}
+custom_rules<-readRDS(system.file('ext/fieldMetadata.rds',package='occTest'))
+custom_rules$errorThreshold<-rep(0.5,nrow(custom_rules))
+custom_rules[custom_rules$testBlock=="lu","errorThreshold"]<-0.7
+custom_rules[custom_rules$testBlock=="geo","errorThreshold"]<-0.2
+
+outDougFirSelectcustom = occFilter(df = outDougFir, custom = custom_rules)
+```
+
+
 ## Let's visualize the strict selection with the plotting function
 
 the plot method for the occTest object returned by *occTest* display the initial coordinates filtering.
@@ -395,7 +407,7 @@ outFiltered_byTestType  = occFilter(df = out, errorAcceptance = 'relaxed', by = 
 ```
 
 
-## Let's plotting the results
+## Let's plot the results
 
 ```{r fig.height = 5.5, fig.width = 7}
 list_of_plots<-plot(out, 
