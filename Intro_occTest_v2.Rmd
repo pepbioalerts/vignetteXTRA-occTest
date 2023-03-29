@@ -2,6 +2,7 @@
 title: "Classifying Occurrence Data with *occTest*"
 author: "Pep Serra-Diaz, Cory Merow, Brian Maitner, Jeremy Borderieux, Arnaud Callebaut"
 date: "`r Sys.Date()`"
+always_allow_html: true
 output: 
   rmarkdown::html_vignette:
     fig_caption: yes
@@ -99,7 +100,7 @@ Examples:
 *HumanDetection_score* summarizes all the other HumanDetection tests and outputs a value from 0 to 1. A value of 0.5 would indicate that half of the tests used indicate that is an a Human signal in the record.
 
 ```{r,echo=F}
-outMartesMartes[1:10,46:52]
+knitr::kable(outMartesMartes[1:10,46:52])
 ```
 
 
@@ -221,14 +222,15 @@ outDougFir = occTest(sp.name='Pseudotsuga menziesii',
 
 
 #check outputs
-knitr::kable(head(outDougFir))
+#knitr::kable(head(as.data.frame(outDougFir))')
+knitr::kable(outDougFir[1:8,1:20])
 ```
 
 
 Then we can use *occFilter* to filter the data according to different acceptance levels of issues in each record. You can have three broad thresholds for filtering data: relaxed (accept up 70% of tests showing issues), strict (20%) or majority (50%). These percentages are applied to groups of tests depending on their nature (testBlocks or testTypes). For instance, a relaxed approach to filtering will filter a record if for a given test groups (e.g. environmental data tests, geographic tests, human detection tests) more than 70% of the tests fail.
 
 ```{r}
-occTest::showTests()
+occTest::show_tests()
 ```
 
 The result is a list where the first element fitleredDataset corresponds to the filtered occurrence records and the second element summaryStats provides the summary statistics of the number of tests performed.
@@ -247,7 +249,7 @@ Show summary values of tests, grouped by
 outDougFirSelec = occFilter(df = outDougFir,errorAcceptance = 'relaxed')
 
 #show filtered dataset
-head(outDougFirSelec[["summaryStats"]])
+knitr::kable(head(outDougFirSelec[["summaryStats"]]),format="markdown")
 
 ```
 The function also allows to set your own acceptance threshold level, and change the grouping of thests (see ?occFilter for further info).
@@ -299,7 +301,8 @@ You can also display the plots one by one when storing the result and setting sh
 ```{r fig.height = 5.5, fig.width = 7}
 list_of_plots <- plot(outDougFir, 
                       occFilter_list = outDougFirSelecstrict, 
-                      show_plot = T)
+                      show_plot = F)
+list_of_plots
 ```
 
 
@@ -412,6 +415,7 @@ outFiltered_byTestType  = occFilter(df = out, errorAcceptance = 'relaxed', by = 
 ```{r fig.height = 5.5, fig.width = 7}
 list_of_plots<-plot(out, 
                     occFilter_list = outFiltered_byTestType, 
-                    show_plot = T)
+                    show_plot = F)
+list_of_plots
 ```
 
