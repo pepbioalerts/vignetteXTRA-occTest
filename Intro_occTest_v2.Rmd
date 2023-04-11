@@ -3,11 +3,9 @@ title: "Classifying Occurrence Data with *occTest*"
 author: "Pep Serra-Diaz, Cory Merow, Brian Maitner, Jeremy Borderieux, Arnaud Callebaut"
 date: "`r Sys.Date()`"
 always_allow_html: true
-output: 
-  rmarkdown::html_vignette:
-    fig_caption: yes
-    toc: true
-    toc_depth: 3
+output:
+  md_document:
+    variant: markdown_github
     
 vignette: >
   %\VignetteIndexEntry{Classifying Occurrence Data with *occTest*}
@@ -223,14 +221,14 @@ outDougFir = occTest(sp.name='Pseudotsuga menziesii',
 
 #check outputs
 #knitr::kable(head(as.data.frame(outDougFir))')
-knitr::kable(outDougFir[1:8,1:20])
+knitr::kable(outDougFir[1:8,1:20],"markdown")
 ```
 
 
 Then we can use *occFilter* to filter the data according to different acceptance levels of issues in each record. You can have three broad thresholds for filtering data: relaxed (accept up 70% of tests showing issues), strict (20%) or majority (50%). These percentages are applied to groups of tests depending on their nature (testBlocks or testTypes). For instance, a relaxed approach to filtering will filter a record if for a given test groups (e.g. environmental data tests, geographic tests, human detection tests) more than 70% of the tests fail.
 
 ```{r}
-occTest::show_tests()
+#render_markdown( occTest::show_tests())
 ```
 
 The result is a list where the first element fitleredDataset corresponds to the filtered occurrence records and the second element summaryStats provides the summary statistics of the number of tests performed.
