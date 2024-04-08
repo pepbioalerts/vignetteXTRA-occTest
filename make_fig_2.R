@@ -32,6 +32,13 @@ my_table_Settings <- occTest::set_tableNames(x.field = 'MAPX',
 
 my_analysis_settings <- set_testTypes(geoenvLowAccuracy = F)
 my_writeout_settings <- set_writeout(output.dir = getwd(),writeAllOutput = T)
+
+
+my_analysis_settings
+
+library(terra)
+ras_env<-rast(ras_env)
+ras_dem<-rast(ras_dem)
 #run workflow
 occ_species_test <- occTest::occTest(sp.name = 'Genus_species',
                                      sp.table = occ_species_raw,
@@ -95,7 +102,7 @@ ras_env_dt$Env<-getValues(ras_env$AllEnv_1)
 hii<-my_analysis_settings$humanDetection$ras.hii
 hii<-crop(hii,ras_env)
 hii_dt<-data.frame(xyFromCell(hii,1:ncell(hii)))
-hii_dt$Hii<-getValues(hii)
+hii_dt$Hii<-readValues(hii)
 
 
 size_big_point<-1.7
@@ -125,7 +132,8 @@ plot_env<-ggplot(pol_ctry_sf)+
   guides(fill=guide_colorbar(title.position = "top", title.hjust = 0.5),color = guide_legend(title.position = "top", title.hjust = 0.5,label.position = "bottom",override.aes=list(size=3)))
 #scale_fill_gradient2(na.value = "transparent",low="blanchedalmond",mid="lightsteelblue",high = "lightsalmon",midpoint = 7,limits=c(0,15),oob=scales::squish)
 
-occ_species_test_sf$Hii_score<-as.factor(occ_species_test_sf$HumanDetection_score)
+occ_species_test_sf$Hii_score<-as.factor(occ_species_test_sf$humanDetection_score)
+
 library(data.table)
 hii_dt<-data.table(hii_dt)
 missing_y<-hii_dt[,sum(is.na(Hii)),by=y][order(-V1),][1,y]
@@ -137,7 +145,7 @@ hii_dt[y==missing_y,]
 
 hii_dt[y==one_pixel_north,]
 
-plotly::ggplotly(plot_hii)
+#plotly::ggplotly(plot_hii)
 
 plot_hii<-ggplot(pol_ctry_sf)+
   geom_tile(data=hii_dt,aes(x=x,y=y,fill=Hii))+
@@ -174,7 +182,7 @@ plot_geo<-ggplot(pol_ctry_sf)+
   theme_bw()+
   geom_sf(data=occ_species_test_sf,color="black",size=size_big_point)+
   geom_sf(data=occ_species_test_sf,aes(color=Geo_score),size=size_small_point)+
-  scale_color_manual(values = c("skyblue2","tan1","tomato4"))+
+  scale_color_manual(values = c("skyblue2","tan1","tomato3","grey20"))+
   guides(fill = guide_colourbar(order = 1),color = guide_legend(order = 2,override.aes=list(size=3)))+
   labs(x="",y="",title="Geographic outlier tests")+
   theme(legend.position = "bottom")+
@@ -186,7 +194,7 @@ library(patchwork)
 
 results_arrange<-plot_1+plot_geo+plot_hii+plot_env+ plot_annotation(tag_levels = 'a',tag_suffix = ')')& theme(plot.tag = element_text(face="bold"))
 
-ggsave("Figure_manuscript_ex_2.png",results_arrange,units = "mm",width = 180,height = 190,dpi=300,scale=1.4, type = "cairo") 
-ggsave("Figure_manuscript_ex_2.pdf",results_arrange,units = "mm",width = 180,height = 180,dpi=300,scale=1.4) 
+ggsave("Figure_manuscript_ex_2.png",results_arrange,units = "mm",width = 180,height = 190,dpi=700,scale=1.4, type = "cairo") 
+ggsave("Figure_manuscript_ex_2.pdf",results_arrange,units = "mm",width = 180,height = 180,dpi=700,scale=1.4) 
 
 plot(occ_species_test,occ_species_test_filter)

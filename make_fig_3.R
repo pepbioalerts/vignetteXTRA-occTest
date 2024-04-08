@@ -9,10 +9,14 @@ occ_data_qupe <-occ2df(df_qupe)
 names (occ_data_qupe)[2] <- 'decimalLongitude'
 names (occ_data_qupe)[3] <- 'decimalLatitude'
 
+
+occ_data_qupe<-occ_data_qupe[occ_data_qupe$decimalLatitude>10,]
+
+
 # downloading environental data
 library (raster)
 renv = raster::getData(name='worldclim',var='bio', res=10,path = tempdir())
-
+renv <- rast(renv)
 # running occTest
 out_qupe = occTest(sp.name='Quercus petraea',sp.table = occ_data_qupe ,r.env = renv,verbose = F)
 # running a strict filtering process
@@ -20,23 +24,26 @@ out_filtered_qupe= occFilter (df = out_qupe , errorAcceptance = 'strict')
 
 custom_rules<-readRDS(system.file('ext/fieldMetadata.rds',package='occTest'))
 custom_rules$errorThreshold<-rep(0.5,nrow(custom_rules))
-custom_rules[custom_rules$testBlock=="lu","errorThreshold"]<-0.7
+custom_rules[custom_rules$testBlock=="lu","errorThreshold"]<-0.5
 custom_rules[custom_rules$testBlock=="geo","errorThreshold"]<-0.2
+custom_rules[custom_rules$testBlock=="env","errorThreshold"]<-0.1
 
 
-out_filtered_qupe = occFilter(df = out_filtered_qupe,custom=custom_rules)
+out_filtered_qupe = occFilter(df = out_qupe,custom=custom_rules)
 
 
 list_of_plots<-plot(x = out_qupe , occFilter_list = out_filtered_qupe, show_plot = F)
 list_of_plots
+list_of_plots[[2]]
 
-
-
+library(ggpubr)
 
 export_2_2<-ggarrange(plotlist = list_of_plots[1:4],nrow=2,ncol=2,align = "hv",labels=c("a)","b)","c)","d)"))
+export_2_2
 
+ggsave("Figure_manuscript_3.jpg",export_2_2,units = "mm",width = 180,height = 150,dpi=700,scale=1.5) # psme
+ggsave("Figure_manuscript_3.pdf",export_2_2,units = "mm",width = 180,height = 130,dpi=700,scale=1.5) # psme
 
-ggsave("Figure_manuscript_2.jpg",export_2_2,units = "mm",width = 180,height = 130,dpi=300,scale=1.5) # psme
 # 
 # 
 # results_arrange<-ggarrange(plotlist = list(plot_1,plot_env,plot_hii,plot_filter),ncol=2,nrow=2,align = "v",labels=c("a)","b)","c)","d)"))
