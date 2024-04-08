@@ -1,5 +1,5 @@
 
-#### figure 4 ####
+#### figure 3 ####
 
 library(occTest)
 library(spocc)
@@ -41,8 +41,8 @@ library(ggpubr)
 export_2_2<-ggarrange(plotlist = list_of_plots[1:4],nrow=2,ncol=2,align = "hv",labels=c("a)","b)","c)","d)"))
 export_2_2
 
-ggsave("Figure_manuscript_3.jpg",export_2_2,units = "mm",width = 180,height = 150,dpi=700,scale=1.5) # psme
-ggsave("Figure_manuscript_3.pdf",export_2_2,units = "mm",width = 180,height = 130,dpi=700,scale=1.5) # psme
+ggsave("Figure_manuscript_3.jpg",export_2_2,units = "mm",width = 180,height = 160,dpi=450,scale=1.5) # psme
+ggsave("Figure_manuscript_3.pdf",export_2_2,units = "mm",width = 180,height = 160,dpi=600,scale=1.5) # psme
 
 # 
 # 
